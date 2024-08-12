@@ -67,7 +67,7 @@ public:
   bool isReading() { return events_ & kReadEvent; }
 
   int index() { return index_; }
-  void set_index(int idx) { index_ = idx; }
+  void set_index(int idx) { index_ = idx; } // 更新channel在poller中的状态（new added deleted）
 
   EventLoop *ownerLoop() { return loop_; } // one loop per thread
   void remove();
@@ -85,7 +85,7 @@ private:
   const int fd_; // channel对象的fd
   int events_;   // 注册的事件
   int revents_;  // poller 返回的事件
-  int index_;
+  int index_;    // 当前channel在poller中的状态（new Added Deleted）
   bool logHup_;
 
   std::weak_ptr<void> tie_;
