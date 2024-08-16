@@ -11,7 +11,7 @@ static int createNonblocking()
   int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
   if (sockfd < 0)
   {
-    LOG_FATAL("%s:%s:%d listen socket create err: %d", __FILE__, __FUNCTION__, __LINE__, errno);
+    LOG_FATAL("%s:%s:%d listen socket create err: %d", __FILE__, __FUNCTION__, __LINE__, errno)
     exit(-1);
   }
   return sockfd;
@@ -57,10 +57,10 @@ void Acceptor::handleRead()
   }
   else
   {
-    LOG_ERROR("%s accept error: %d", __FUNCTION__, errno);
+    LOG_ERROR("%s accept error: %d", __FUNCTION__, errno)
     if (errno == EMFILE)
     {
-      LOG_ERROR("reached fd limits");
+      LOG_ERROR("reached fd limits")
     }
   }
 }

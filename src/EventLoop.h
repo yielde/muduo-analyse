@@ -8,6 +8,7 @@
 
 #include "nocopyable.h"
 #include "Timestamp.h"
+#include "CurrentThread.h"
 
 class Channel;
 class Poller;

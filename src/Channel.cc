@@ -1,5 +1,6 @@
 #include "Channel.h"
 #include "Logger.h"
+#include "EventLoop.h"
 #include <sys/epoll.h>
 
 const int Channel::kNoneEvent = 0;
@@ -40,16 +41,18 @@ void Channel::tie(const std::shared_ptr<void> &obj)
 // 删除当前的channel，通过eventloop调用poller
 void Channel::remove()
 {
+  loop_->removeChannel(this);
 }
 
 // 改变fd的events后，通过eventloop调用poller设置epoll_ctl
 void Channel::update()
 {
+  loop_->updateChannel(this);
 }
 // 根据poller通知的事件，调用该channel的回调
 void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
-  LOG_INFO("channel handle events %d", revents_);
+  LOG_INFO("channel handle events %d", revents_)
 
   if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN))
   {

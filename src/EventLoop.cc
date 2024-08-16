@@ -15,7 +15,7 @@ int createEventfd()
   int evfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
   if (evfd < 0)
   {
-    LOG_FATAL("create eventfd error: %d", errno);
+    LOG_FATAL("create eventfd error: %d", errno)
     abort();
   }
   return evfd;
@@ -30,10 +30,10 @@ EventLoop::EventLoop()
       ,
       wakeupChannel_(new Channel(this, wakeupFd_))
 {
-  LOG_DEBUG("EventLoop created %p in thread %d", this, threadId_);
+  LOG_DEBUG("EventLoop created %p in thread %d", this, threadId_)
   if (t_loopInThisThread)
   {
-    LOG_FATAL("Another EventLoop %p exists in this thread %d", t_loopInThisThread, threadId_);
+    LOG_FATAL("Another EventLoop %p exists in this thread %d", t_loopInThisThread, threadId_)
     exit(-1);
   }
   else
@@ -61,7 +61,7 @@ void EventLoop::loop()
   looping_ = true;
   quit_ = false;
 
-  LOG_INFO("EventLoop %p start looping", this);
+  LOG_INFO("EventLoop %p start looping", this)
 
   while (!quit_)
   {
@@ -77,7 +77,7 @@ void EventLoop::loop()
     doPendingFunctors();
   }
 
-  LOG_INFO("EventLoop %p stop looping", this);
+  LOG_INFO("EventLoop %p stop looping", this)
   looping_ = false;
 }
 
@@ -121,7 +121,7 @@ void EventLoop::wakeup()
   ssize_t n = write(wakeupFd_, &one, sizeof(one));
   if (n != sizeof(one))
   {
-    LOG_ERROR("EventLoop::wakeup() writes %lu bytes instead of 8", n);
+    LOG_ERROR("EventLoop::wakeup() writes %lu bytes instead of 8", n)
   }
 }
 
@@ -148,7 +148,7 @@ void EventLoop::handleRead()
   ssize_t n = read(wakeupFd_, &one, sizeof(one));
   if (n != sizeof(one))
   {
-    LOG_ERROR("EventLoop::handleRead() reads %lu bytes instead of 8", n);
+    LOG_ERROR("EventLoop::handleRead() reads %lu bytes instead of 8", n)
   }
 }
 

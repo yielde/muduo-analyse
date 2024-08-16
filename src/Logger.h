@@ -4,34 +4,46 @@
 
 #include "nocopyable.h"
 
-#define LOG_INFO(logmsgFormat, ...)                 \
-  Logger &logger = Logger::instance();              \
-  logger.setLogLevel(INFO);                         \
-  char buf[1024] = {0};                             \
-  snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-  logger.log(buf);
+#define LOG_INFO(logmsgFormat, ...)                   \
+  do                                                  \
+  {                                                   \
+    Logger &logger = Logger::instance();              \
+    logger.setLogLevel(INFO);                         \
+    char buf[1024] = {0};                             \
+    snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
+    logger.log(buf);                                  \
+  } while (0);
 
-#define LOG_ERROR(logmsgFormat, ...)                \
-  Logger &logger = Logger::instance();              \
-  logger.setLogLevel(ERROR);                        \
-  char buf[1024] = {0};                             \
-  snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-  logger.log(buf);
+#define LOG_ERROR(logmsgFormat, ...)                  \
+  do                                                  \
+  {                                                   \
+    Logger &logger = Logger::instance();              \
+    logger.setLogLevel(ERROR);                        \
+    char buf[1024] = {0};                             \
+    snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
+    logger.log(buf);                                  \
+  } while (0);
 
-#define LOG_FATAL(logmsgFormat, ...)                \
-  Logger &logger = Logger::instance();              \
-  logger.setLogLevel(FATAL);                        \
-  char buf[1024] = {0};                             \
-  snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
-  logger.log(buf);
+#define LOG_FATAL(logmsgFormat, ...)                  \
+  do                                                  \
+  {                                                   \
+    Logger &logger = Logger::instance();              \
+    logger.setLogLevel(FATAL);                        \
+    char buf[1024] = {0};                             \
+    snprintf(buf, 1024, logmsgFormat, ##__VA_ARGS__); \
+    logger.log(buf);                                  \
+  } while (0);
 
 #ifdef MUDEBUG
-#define LOG_DEBUG(logmsgFormat, ...)              \
-  Logger &logger = Logger::instance();            \
-  logger.setLogLevel(DEBUG);                      \
-  char buf[1024] = {0};                           \
-  snprintf(buf, 1024, logmsgFormat, ##_VA_ARGS_); \
-  logger.log(buf);
+#define LOG_DEBUG(logmsgFormat, ...)                \
+  do                                                \
+  {                                                 \
+    Logger &logger = Logger::instance();            \
+    logger.setLogLevel(DEBUG);                      \
+    char buf[1024] = {0};                           \
+    snprintf(buf, 1024, logmsgFormat, ##_VA_ARGS_); \
+    logger.log(buf);                                \
+  } while (0);
 
 #else
 #define LOG_DEBUG(logmsgFormat, ...)
