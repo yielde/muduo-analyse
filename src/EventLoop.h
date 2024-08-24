@@ -9,9 +9,12 @@
 #include "nocopyable.h"
 #include "Timestamp.h"
 #include "CurrentThread.h"
+#include "TimerId.h"
+#include "Callbacks.h"
 
 class Channel;
 class Poller;
+class TimerQueue;
 
 // Reactor
 class EventLoop : nocopyable
@@ -37,6 +40,8 @@ public:
   bool hasChannel(Channel *channel);
 
   bool isInLoopThread() const { return threadId_ == CurrentThread::tid(); }
+  TimerId runAt(Timestamp time, TimerCallbck cb);
+  TimerId runAfter(int delay, TimerCallbck cb);
 
 private:
   void handleRead();
@@ -61,4 +66,5 @@ private:
 
   std::atomic_bool callingPendingFunctors_;
   std::vector<Functor> pendingFunctors_;
+  std::unique_ptr<TimerQueue> timerQueue_;
 };

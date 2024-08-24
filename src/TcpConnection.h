@@ -45,6 +45,8 @@ public:
 
   void connectEstablished();
   void connectDestroyed();
+  void forceClose();
+  void forceCloseInLoop();
 
 private:
   enum StateE

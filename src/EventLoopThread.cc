@@ -24,6 +24,7 @@ EventLoop *EventLoopThread::startLoop()
     std::unique_lock<std::mutex> lock(mutex_);
     while (loop_ == nullptr)
     {
+      // 等待threadInitCallback
       cond_.wait(lock);
     }
     loop = loop_;

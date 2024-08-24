@@ -21,7 +21,9 @@ Thread::~Thread()
 void Thread::start()
 {
   started_ = true;
-  // 使用c++11的semphore，muduo是自己实现了一个互斥量的类来实现同步原语
+  // 使用c++11的semphore
+  // muduo使用pthread_condition_t实现了一个countdownlatch传入线程，
+  // 在主线程设置倒计时器为1，子线程初始化完毕后会countdown，count为0后通知主线程（pthread_cond_broadcast）
   sem_t sem;
   sem_init(&sem, false, 0);
 

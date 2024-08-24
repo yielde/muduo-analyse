@@ -9,7 +9,7 @@ if [ ! -d ${CURRENT_PATH}/build ]; then
   mkdir ${CURRENT_PATH}/build
 fi
 
-if [ ! -d $(CURRENT_PATH)/lib ]; then
+if [ ! -d ${CURRENT_PATH}/lib ]; then
   mkdir ${CURRENT_PATH}/lib
 fi
 

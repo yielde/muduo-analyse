@@ -3,6 +3,7 @@
 #include "Poller.h"
 #include "Channel.h"
 #include "CurrentThread.h"
+#include "TimerQueue.h"
 #include <sys/eventfd.h>
 #include <memory>
 
@@ -22,13 +23,14 @@ int createEventfd()
 }
 
 EventLoop::EventLoop()
-    : looping_(false), quit_(false), callingPendingFunctors_(false), threadId_(CurrentThread::tid()) // 获取当前EventLoop的tid
-      ,
-      poller_(Poller::newDefaultPoller(this)) // 将该eventloop与poller绑定
-      ,
-      wakeupFd_(createEventfd()) // 通过eventfd实现唤醒subreactor处理channel，还可以socketpair来做
-      ,
-      wakeupChannel_(new Channel(this, wakeupFd_))
+    : looping_(false),
+      quit_(false),
+      callingPendingFunctors_(false),
+      threadId_(CurrentThread::tid()),         // 获取当前EventLoop的tid
+      poller_(Poller::newDefaultPoller(this)), // 将该eventloop与poller绑定
+      wakeupFd_(createEventfd()),              // 通过eventfd实现唤醒subreactor处理channel，还可以socketpair来做
+      wakeupChannel_(new Channel(this, wakeupFd_)),
+      timerQueue_(new TimerQueue(this))
 {
   LOG_DEBUG("EventLoop created %p in thread %d", this, threadId_)
   if (t_loopInThisThread)
@@ -94,6 +96,7 @@ void EventLoop::runInLoop(Functor cb)
 {
   if (isInLoopThread())
   {
+    LOG_INFO("inLoopThread: func %p", cb);
     cb();
   }
   else
@@ -140,6 +143,17 @@ void EventLoop::removeChannel(Channel *channel)
 bool EventLoop::hasChannel(Channel *channel)
 {
   return poller_->hasChannel(channel);
+}
+
+TimerId EventLoop::runAt(Timestamp time, TimerCallbck cb)
+{
+  return timerQueue_->addTimer(std::move(cb), time, 0);
+}
+
+TimerId EventLoop::runAfter(int delay, TimerCallbck cb)
+{
+  Timestamp time(addTime(Timestamp::now(), delay));
+  return runAt(time, std::move(cb));
 }
 
 void EventLoop::handleRead()
