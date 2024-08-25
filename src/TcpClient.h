@@ -18,7 +18,7 @@ public:
   TcpConnectionPtr connection() const;
   EventLoop *getLoop() const { return loop_; }
   bool retry() const { return retry_; }
-  bool enableRetry() { retry_ = true; }
+  void enableRetry() { retry_ = true; }
 
   const std::string &name() const { return name_; }
 

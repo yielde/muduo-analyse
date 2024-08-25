@@ -56,7 +56,6 @@ void Channel::handleEventWithGuard(Timestamp receiveTime)
 
   if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN))
   {
-    LOG_INFO("handle HUP");
     if (closeCallback_)
     {
       LOG_INFO("closeCallback_ ----------");
@@ -66,7 +65,6 @@ void Channel::handleEventWithGuard(Timestamp receiveTime)
 
   if (revents_ & EPOLLERR)
   {
-    LOG_INFO("handle ERR");
     if (errorCallback_)
     {
       LOG_INFO("errorCallback_ ----------");
@@ -76,15 +74,12 @@ void Channel::handleEventWithGuard(Timestamp receiveTime)
 
   if (revents_ & (EPOLLIN | EPOLLPRI))
   {
-    LOG_INFO("handle IN");
     if (readCallback_)
       readCallback_(receiveTime);
   }
 
   if (revents_ & EPOLLOUT)
   {
-    LOG_INFO("handle WRITE");
-    LOG_INFO("writecallback_ address: %p", writeCallback_);
     if (writeCallback_)
     {
       LOG_INFO("writeCallback_ ----------");

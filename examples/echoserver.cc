@@ -1,5 +1,6 @@
 #include <yieldemuduo/TcpServer.h>
 #include <yieldemuduo/Logger.h>
+#include <yieldemuduo/Timer.h>
 
 #include <string>
 #include <functional>
@@ -35,8 +36,10 @@ private:
   void onMessage(const TcpConnectionPtr &conn, Buffer *buf, Timestamp time)
   {
     std::string msg = buf->retrieveAllAsString();
-    conn->send(msg);
-    conn->shutdown();
+    sleep(3);
+    conn->send(time.toString());
+    LOG_INFO("my message %s", msg.c_str());
+    // conn->shutdown();
   }
 
 private:

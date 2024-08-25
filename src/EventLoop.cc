@@ -96,7 +96,6 @@ void EventLoop::runInLoop(Functor cb)
 {
   if (isInLoopThread())
   {
-    LOG_INFO("inLoopThread: func %p", cb);
     cb();
   }
   else

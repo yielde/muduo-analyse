@@ -85,7 +85,6 @@ void Connector::connect()
   int sockfd = createNonblocking();
   int ret = ::connect(sockfd, (sockaddr *)serverAddr_.getSockAddr(), static_cast<socklen_t>(sizeof(sockaddr_in)));
   int savedErrno = (ret == 0) ? 0 : errno;
-  LOG_INFO("++++++++++++sockfd: %d, errno: %d", sockfd, savedErrno);
   switch (savedErrno)
   {
   case 0:
@@ -141,7 +140,6 @@ void Connector::connecting(int sockfd)
 
 void Connector::handleWriter()
 {
-  LOG_ERROR("Connector::handleWriter");
   LOG_INFO("Connector::handleWrite, state: %d", state_);
   if (state_ == kConnecting)
   {
@@ -172,7 +170,7 @@ void Connector::handleWriter()
       struct sockaddr_in peeraddr;
       bzero(&peeraddr, sizeof(peeraddr));
       socklen_t peerlen = sizeof(peeraddr);
-      ::getsockname(fd, (sockaddr *)&peeraddr, &peerlen);
+      ::getpeername(fd, (sockaddr *)&peeraddr, &peerlen);
 
       return localaddr.sin_addr.s_addr == peeraddr.sin_addr.s_addr && localaddr.sin_port == peeraddr.sin_port; }(sockfd))
     {
@@ -208,7 +206,6 @@ void Connector::handleWriter()
 
 void Connector::handleError()
 {
-  LOG_ERROR("Connector::handleError");
   LOG_ERROR("Connector::handleError state=%d %d", state_, errno);
   if (state_ == kConnecting)
   {
@@ -225,7 +222,7 @@ void Connector::retry(int sockfd)
 {
   if (::close(sockfd) < 0)
   {
-    LOG_ERROR("close socket %d error");
+    LOG_ERROR("close socket %d error", errno);
   }
   setState(kDisconnected);
   if (connect_)
@@ -233,7 +230,7 @@ void Connector::retry(int sockfd)
     LOG_INFO("Connector::retry - Retry connecting to %s in %d", serverAddr_.toIpPort().c_str(), retryDelayMs_);
     // loop_->runInLoop(std::bind(&Connector::startInLoop, shared_from_this()));
     // loop_->queueInLoop(std::bind(&Connector::startInLoop, shared_from_this()));
-    loop_->runAfter(1, std::bind(&Connector::startInLoop, shared_from_this()));
+    loop_->runAfter(5, std::bind(&Connector::startInLoop, shared_from_this()));
   }
   else
   {

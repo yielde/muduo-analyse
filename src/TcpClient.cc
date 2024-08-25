@@ -25,12 +25,11 @@ TcpClient::TcpClient(EventLoop *loop, const InetAddress &serverAddr, const std::
       nextConnId_(1)
 {
   connector_->setNewConnectionCallback(std::bind(&TcpClient::newConnection, this, std::placeholders::_1));
-  LOG_INFO("TcpClient::TcpClient[%s] - connector %p", name_, connector_.get());
 }
 
 TcpClient::~TcpClient()
 {
-  LOG_INFO("TcpClient::~TcpClient[%s] - connector %p", name_, connector_.get());
+  LOG_INFO("TcpClient::~TcpClient[%s] - connector %p", name_.c_str(), connector_.get());
   TcpConnectionPtr conn;
   bool unique = false;
   {
@@ -55,7 +54,7 @@ TcpClient::~TcpClient()
 
 void TcpClient::connect()
 {
-  LOG_INFO("TcpClient::connect[%s] - connecting to %s", name_, connector_->serverAddress().toIpPort().c_str());
+  LOG_INFO("TcpClient::connect[%s] - connecting to %s", name_.c_str(), connector_->serverAddress().toIpPort().c_str());
   connect_ = true;
   connector_->start();
 }
@@ -71,6 +70,7 @@ void TcpClient::disconnect()
     }
   }
 }
+
 void TcpClient::stop()
 {
   connect_ = false;
@@ -114,7 +114,7 @@ void TcpClient::removeConnection(const TcpConnectionPtr &conn)
   loop_->queueInLoop(std::bind(&TcpConnection::connectDestroyed, conn));
   if (retry_ && connect_)
   {
-    LOG_INFO("TcpClient::connect[%s] - Reconnecting to %s", name_, connector_->serverAddress().toIpPort().c_str());
+    LOG_INFO("TcpClient::connect[%s] - Reconnecting to %s", name_.c_str(), connector_->serverAddress().toIpPort().c_str());
     connector_->restart();
   }
 }

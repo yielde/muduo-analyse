@@ -35,7 +35,7 @@ void readTimerfd(int timerfd, Timestamp now)
 {
   uint64_t count;
   ssize_t n = ::read(timerfd, &count, sizeof(count));
-  LOG_INFO("TimerQueue::handleread, timer called %d times at %s", count, now.toString().c_str());
+  LOG_INFO("TimerQueue::handleread, timer called %ld times at %s", count, now.toString().c_str());
 }
 
 void resetTimerfd(int timerfd, Timestamp expiration)
